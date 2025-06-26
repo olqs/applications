@@ -1,0 +1,15 @@
+apiVersion: argocd.argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: git-apps
+spec:
+  generators:
+  - git:
+      repoURL: 'https://gitea.home.olqs.de/argocd/applications'
+      revision: main           # oder z.B. main
+      # Finde jede application.yaml, egal in welchem Unterordner
+      files:
+      - path: '**/application.yaml'
+  template:
+    merge:
+      raw: '{{content}}'

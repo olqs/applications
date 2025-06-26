@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: example
+  sources:
+    - repoURL: "registry-1.docker.io/bitnamicharts"
+      chart: apache               # z. B. mariadb, nginx etc.
+      targetRevision: "11.3.16" # z. B. 15.9.0
+      path: apache
+      helm:
+        valueFiles:
+          - $values/values.yaml
+    - repoURL: "https://gitea.home.olqs.de/argocd/example"
+      targetRevision: "main"
+      ref: values
