@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: example
-  namespace: argocd
+  namespace: example
 spec:
   project: default
   destination:
@@ -19,3 +19,9 @@ spec:
     - repoURL: "https://gitea.home.olqs.de/argocd/example"
       targetRevision: "main"
       ref: values
+  syncPolicy:
+    automated:
+      prune: true        # lösche Ressourcen, die nicht mehr im Git sind
+      selfHeal: true     # stelle bei manuellen Änderungen den Git-Zustand wieder her
+    syncOptions:
+      - CreateNamespace=true  # Namespace automatisch anlegen, falls noch nicht da
