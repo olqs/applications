@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example2
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: example2
+  sources:
+    - repoURL: "registry-1.docker.io/bitnamicharts"
+      chart: apache               # z. B. mariadb, nginx etc.
+      targetRevision: "11.3.16" # z. B. 15.9.0
+      path: apache
+      helm:
+        valueFiles:
+          - $values/values.yaml
+    - repoURL: "https://gitea.home.olqs.de/argocd/example2"
+      targetRevision: "main"
+      ref: values
+  syncPolicy:
+    automated:
+      prune: true        # lösche Ressourcen, die nicht mehr im Git sind
+      selfHeal: true     # stelle bei manuellen Änderungen den Git-Zustand wieder her
+    syncOptions:
+      - CreateNamespace=true  # Namespace automatisch anlegen, falls noch nicht da
