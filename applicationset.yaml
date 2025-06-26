@@ -6,11 +6,24 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: 'https://gitea.home.olqs.de/argocd/applications'
+      repoURL: 'https://github.com/olqs/applications'
       revision: main           # oder z.B. main
       # Finde jede application.yaml, egal in welchem Unterordner
       files:
       - path: '**/application.yaml'
   template:
-    merge:
-      raw: '{{content}}'
+    metadata:
+      name: '{{path.basename}}-meta'
+    spec:
+      project: default
+
+      source:
+        repoURL: 'https://github.com/olqs/applications'
+        targetRevision: main
+        # Pfad zum Ordner, in dem sich die application.yaml befindet
+        path: 'example'
+
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: default
+
