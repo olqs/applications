@@ -14,6 +14,7 @@ spec:
   template:
     metadata:
       name: '{{path.basename}}-meta'
+      namespace: argocd
     spec:
       project: default
 
@@ -21,9 +22,13 @@ spec:
         repoURL: 'https://github.com/olqs/applications'
         targetRevision: main
         # Pfad zum Ordner, in dem sich die application.yaml befindet
-        path: 'example'
+        path: '{{path.basename}}'
 
       destination:
         server: 'https://kubernetes.default.svc'
         namespace: default
+      syncPolicy:
+        automated:
+          prune: true        # lösche Ressourcen, die nicht mehr im Git sind
+          selfHeal: true     # stelle bei manuellen Änderungen den Git-Zustand wieder her
 
